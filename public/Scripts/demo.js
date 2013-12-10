@@ -133,6 +133,205 @@ function scaleData(data){
 		console.log("Time: " + new Date(randomValue.Timestamp) + " scales to " + xScale(randomValue.Timestamp));
 		console.log("BGL: " + randomValue.bgl + " scales to " + yScale(randomValue.bgl));
 
+}
 
+function joinData(data){
+
+	/* 
+		Data joins are the bread and butter of d3js. Given an array of data, we can quickly bind
+		this data to elements in the DOM, creating and removing elements on the fly using a set
+		of rules. Set the rules once, then change your data forever and see the magic!
+
+	*/
+
+	//FIRST, WE CREATE A 'SELECTION'
+	/*
+		The key here is that the elements we're selecting won't yet exist in the DOM, and will
+		be created and destroyed as we pass or remove their data references.
+
+		For this example, let's create a little div for each blood glucose object in the data array.
+	*/
+
+	var bgls = d3.select(".visualization").selectAll("div.bgl").data(data);
+
+	/*
+		Here, we are using d3 to select the ".visualization" container div, then creating a d3 
+	  	selection using selectAll, then binding our data to that selection. 
+
+	  	Keep in mind there are currently no divs with class 'bgl'!
+
+	*/
+
+	//SECOND, WE CREATE RULES FOR WHAT HAPPENS WHEN WE GET NEW DATA, UPDATE EXISTING DATA, AND REMOVE DATA
+	/*
+		d3js provides tons of utilities for adding, removing and updating DOM content based on an
+		ever-changing data set. Let's add some rules for when we add new data!
+	*/
+
+	
+	/*
+		First, let's create a rule that handles a div in general- this will get applied when
+		a div already exists and is updated, and will get applied every time a div is acted
+		upon. The order of the update, enter(), and exit() will have an additive kind of effect,
+		similar to the way CSS cascades.
+	*/
+
+	bgls
+		//since we already created it, let's just modify the data-value attribute
+		.attr("data-value", function(d){
+				return d.bgl;
+			})
+		//and the inner html
+		.html(function(d){
+				return d.bgl;
+			})
+
+	/*
+		Second, let's handle new divs by adding them and styling them
+
+	*/
+
+	bgls
+		.enter()
+			//first, append a new div
+			.append("div")
+			//add the class 'bgl'
+			.attr("class", "bgl")
+			//add a data attribute with the bgl value of the object
+			.attr("data-value", function(d){
+				//return any property of 'd', which is the current array object
+				return d.bgl;
+			})					
+			//and last, let's add the blood sugar value with units as the inner html of the div
+			.html(function(d){
+				return d.bgl;
+			})
+
+	/*
+		Now, let's create a rule that handles a div when it's removed
+	*/
+
+	//on exit, remove the div from the DOM!
+	bgls
+		.exit()
+		.remove("div");
+
+	/*
+		Try running this function with any subset of the json data! 
+
+		Like:
+		joinData(json.slice(0,10));
+		joinData(json.slice(143,250));
+
+	*/
 
 }
+
+function joinDataWithKey(data){
+
+	/* 
+		In the previous example, we joined an array of data to a DOM selection, woo!
+
+		But wait, you might ask, how do we identify our data in the DOM? What if we had an 
+		array of timestamped objects, where the VALUES of these objects change, but the 
+		timestamp persists? Or what if the order of the object changes in the array?
+
+		Interesting question!
+
+		Mike Bostok has an awesome explanation of joins and selections here:
+		http://bost.ocks.org/mike/selection/
+
+		It's a long read, but is awesome for understanding this essential feature of d3js.
+
+		The short of it is that when you bind data to a selection, the default way of handling
+		what data belongs to which item in the selection is by array order. While this may work in 
+		a variety of cases, there are many examples where you want to keep track of data binding
+		using a key- like timestamp, name, color, whatever.
+
+		We'll cover that here, building off of the previous example!
+
+	*/
+
+	var bgls = d3.select(".visualization").selectAll("div.bgl").data(data, function(d){
+		return d.Timestamp;
+	});
+
+	/*
+		NOTE: the callback function passed into .data() returns the property we are going to 
+		use to keep track of what's new, added, etc. In this case it's the 'bgl' property.
+
+		Next, we'll apply a simple color change when something is added, updated, or removed.
+
+	*/	
+
+	/*
+		First, let's create a rule that handles a div when it's updated, our rule in general
+		for how data gets applied to a div.
+	*/
+
+	bgls
+		//since we already created it, let's just modify the data-value attribute
+		.attr("data-value", function(d){
+				return d.bgl;
+			})
+		//and the inner html
+		.html(function(d){
+				return d.bgl;
+			})
+		//let's make it blue when we've updated it
+		.style("background-color", "#336699")
+
+
+	/*
+
+		Second, let's create the rule that handles when a div is first added, 
+		this is a kind of additive code- the order of the update and enter() will
+		change the way these rules are applied to the div!
+
+		By putting the enter() second, we are guaranteeing that the background color
+		will be green.
+	*/
+
+	bgls
+		.enter()
+			//first, append a new div
+			.append("div")
+			//add the class 'bgl'
+			.attr("class", "bgl")
+			//add a data attribute with the bgl value of the object
+			.attr("data-value", function(d){
+				//return any property of 'd', which is the current array object
+				return d.bgl;
+			})					
+			//and last, let's add the blood sugar value with units as the inner html of the div
+			.html(function(d){
+				return d.bgl;
+			})
+			//let's make it green when we've first added it
+			.style("background-color", "#008811")
+	
+	/*
+		Now, let's create a rule that handles a div when it's removed
+	*/
+
+	//on exit, remove the div from the DOM!
+	bgls
+		.exit()
+			//and red when it's been 'removed'
+			.style("background-color", "#ca9000")
+
+	/* 
+
+		Passing an array of 10, but shifting the slice() start and end, we can
+		see how d3js handles these states.
+
+		Try these 3 commands in the console, in sequence!
+
+		joinDataWithKey(json.slice(0,10));
+		joinDataWithKey(json.slice(4,14));
+		joinDataWithKey(json.slice(8,18));
+
+	*/
+
+}
+
