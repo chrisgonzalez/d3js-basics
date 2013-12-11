@@ -84,6 +84,17 @@ function analyzeData(data, noConsole){
 		dataExtent: dataRange
 	}
 
+	/* 
+		Try calling this function!
+
+		analyzeData(json); //to run analysis on the whole set
+
+		or
+
+		analyzeData(json.slice(20,50)); //to run analysis on a subset!
+
+	*/
+
 }
 
 function scaleData(data){
@@ -132,6 +143,17 @@ function scaleData(data){
 		var randomValue = data[Math.floor(Math.random()*data.length)]
 		console.log("Time: " + new Date(randomValue.Timestamp) + " scales to " + xScale(randomValue.Timestamp));
 		console.log("BGL: " + randomValue.bgl + " scales to " + yScale(randomValue.bgl));
+
+		/* 
+			Try calling this function!
+
+			scaleData(json); //to create scales for the whole set
+
+			or
+
+			scaleData(json.slice(20,50)); //to create scales for a subset of data!
+
+		*/
 
 }
 
