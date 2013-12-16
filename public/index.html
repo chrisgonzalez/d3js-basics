@@ -7,22 +7,67 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>D3JS Basics</title>
+		<title>ITStrategy Dashboard</title>
 		<link rel="stylesheet" href="Content/styles/normalize.css">
 		<link rel="stylesheet" href="Content/styles/style.css">
 
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<script src="Scripts/d3.min.js"></script>
-		<script src="Scripts/demo.js"></script>
+		<script src="Scripts/handlebars-v1.1.2.js"></script>
+		<script src="Scripts/pivotal.tracker.js"></script>
+		<script src="Scripts/bitbucket.js"></script>
 	</head>
 
 	<body>
-		<h1>d3js basics</h1>
-		<p>Look in /public/Scripts/demo.js!</p>
 
-		<div class="visualization">
+		<div class="bitbucket">
+			<h1>Bitbucket Feed</h1>
+
+		</div>
+
+
+		
+		
+
+
+
+
+
+<!-- ALL THESE DIVS NEED TO BE INCLUDED FOR PROJECT DASHBOARD -->
+
+		<h1>Projects Feed</h1>
+		<div class="projects">
+
 			<!-- WE WILL BE CREATING DIVS DYNAMICALLY BASED ON DATA! -->
 		</div>
+
+		<div id="projects" class="template">
+			{{#.}}
+				<div class="project" data-id="{{id}}">
+					<h2 class="name">{{name}}</h2>
+					<div class="team"></div>
+					<div class="stories"></div>
+					
+				</div>
+			{{/.}}
+		</div>
+
+		<div id="stories" class="template">
+			{{#.}}
+				<div class="story {{name}}">
+					<span class="count">{{count}}</span><span class="icon">{{{icon}}}</span>
+				</div>
+			{{/.}}
+		</div>
+
+		<div id="team" class="template">
+			{{#.}}
+				<span>{{person.initials}}</span>
+			{{/.}}
+		</div>
+
+<!-- END PROJECT DASHBOARD HTML -->
+
 	</body>
 
 
